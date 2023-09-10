@@ -4,7 +4,7 @@ import java.util.Scanner;
 import Enum.*;
 
 public class Lesson {
-    private static int idd;
+    private static int idd=1;
     private int id;
     private String lessonName;
     private String lessonDecryption;
@@ -52,9 +52,18 @@ public class Lesson {
         int a =scanner.nextInt();
         switch (a){
             case 1:
-                Gender male= Gender.Male;
+                Gender male= Gender.MALE;
             case 2:
-                Gender Female= Gender.Female;
+                Gender Female= Gender.FEMALE;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Lesson\n" +
+                "\tId: " + id + "\n" +
+                "\tLessonName: '" + lessonName + "'\n" +
+                "\tLessonDecryption: '" + lessonDecryption + "'\n";
+    }
+
 }

@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class Group {
-    private static int idd;
+    private static int idd=1;
     private int id;
     private String name;
     private String decryption;
@@ -60,12 +60,12 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Group{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", decryption='" + decryption + '\'' +
-                ", students=" + students +
-                ", lessons=" + lessons +
-                '}';
+        return "Group\n" +
+                "\tId: " + id + "\n" +
+                "\tName: '" + name + "'\n" +
+                "\tDecryption: '" + decryption + "'\n" +
+                "\tStudents: " + students + "\n" +
+                "\tLessons: " + lessons + "\n";
     }
+
 }

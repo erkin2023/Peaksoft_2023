@@ -3,6 +3,7 @@ package Server.impl;
 import Datebase.DateBase;
 import Server.GroupService;
 import model.Group;
+import model.Lesson;
 import model.Person;
 import model.Student;
 
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import Enum.*;
+import org.w3c.dom.ls.LSOutput;
 
 
 public class GroupServiceImpl implements GroupService {
@@ -29,20 +31,30 @@ private DateBase datebase;
     }
 
     @Override
-    public void AddNewGroup(Group groups) {
-        List<Group>newGroup = new LinkedList<>();
-        newGroup.add(groups);
-
+    public String AddNewGroup(Group groups) {
+         datebase.getGroups().add(groups);
+        return "new group :\n" + groups;
     }
+    public boolean isGroupExists(String groupName) {
+        List<Group>groupList=datebase.getGroups();
+        // Перебираем список групп, чтобы проверить, существует ли группа с заданным именем.
+        for (Group group : groupList) {
+            if (group.getName().equalsIgnoreCase(groupName)) {
+                return true; // Найдена группа с тем же именем.
+            }
+        }
+        return false; // Группа с таким именем не найдена.
+    }
+
 
     @Override
     public void GetGroupByName(String nameGroup) {
         System.out.print("Список group");
-        Iterator<Group>iterator = getDateBase().getGroups().iterator();
-        while (iterator.hasNext()){
-            Group group=iterator.next();
-            if (group.getName().equals(nameGroup)){
-                iterator.remove();
+        for(Group g: datebase.getGroups()){
+            if (g.getName().equals(nameGroup)){
+                System.out.println(g);
+            }else {
+                System.out.println("К сожалению такой группы нет ");
             }
         }
     }
@@ -58,35 +70,45 @@ private DateBase datebase;
                 erkin = true;
                 datebase.getGroups().get(i).setName(a);
                 System.out.println();
-                System.out.println("Успешно добавленно");
+                System.out.println("Успешно обновлено : "+nameGroup);
             }
         }
     }
 
     @Override
     public void GetAllGroups() {
-        for (int i = 0; i < datebase.getGroups().size(); i++) {
-            if (datebase.getGroups().get(i) != null) {
-                System.out.println(i);
-            } else {
-                System.out.println("К сожалению у вас групп , сначало создайте");
+        List<Group> groups = datebase.getGroups();
+        if (groups.isEmpty()) {
+            System.out.println("К сожалению у вас нет групп , сначало создайте");
+        } else {
+            for (Group b: groups){
+                if (b != null) {
+                    System.out.println(b);
+                }
             }
         }
     }
 
     @Override
     public void AddNewStudentToGroup(String nameGroup) {
+        List<Lesson>lessons = datebase.getLessons();
         Scanner scanner = new Scanner(System.in);
         for (int i = 0; i <datebase.getGroups().size() ; i++) {
             if (datebase.getGroups().get(i).getName().equals(nameGroup)) {
+                System.out.println("filling in student data");
                 System.out.print("last name : ");
                 String lastName = scanner.nextLine();
+
                 System.out.print("first name : ");
                 String firstName = scanner.nextLine();
-                String email = scanner.nextLine();
+
                 System.out.print("email : ");
+                String email = scanner.nextLine();
+                System.out.println("password");
                 String password = scanner.nextLine();
-                System.out.print("Put name of the gender: ");
+                System.out.println("Напишите ваш пол : ");
+                System.out.println("Мужской - Male : ");
+                System.out.println("Женский - Female : ");
                 String genderSInput = scanner.next();
                 Gender gens = Gender.fromString(genderSInput);
                 if (gens != null) {
@@ -96,6 +118,8 @@ private DateBase datebase;
                 } else {
                     System.out.println("Invalid gender input.");
                 }
+            }else {
+                System.out.println("Такой группы "+nameGroup+" не существует");
             }
             }
         }
@@ -108,10 +132,22 @@ private DateBase datebase;
             Group group = iterator.next();
             if (group.getName().equals(nameGroup)) {
                 iterator.remove();
+                System.out.println("Группа с именем : "+ nameGroup + " успешно удален");
             }else {
-                System.out.println("К сожалению с"+nameGroup+" таким именем группы нет");
+                System.out.println("К сожалению с "+nameGroup+" таким именем группы нет");
             }
         }
     }
 
+    @Override
+    public void GetAllStudentsByGroupName(String nameGroup) {
+        for (Group g: datebase.getGroups()){
+            if (g.getName().equalsIgnoreCase(nameGroup)){
+                System.out.println(g.getStudents());
+            }
+            else {
+                System.out.println("К сожалению с таким :"+nameGroup+"  именем группы нет");
+            }
+        }
+}
 }
